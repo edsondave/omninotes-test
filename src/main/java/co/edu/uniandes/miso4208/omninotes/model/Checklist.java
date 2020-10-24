@@ -2,7 +2,7 @@ package co.edu.uniandes.miso4208.omninotes.model;
 
 import java.util.List;
 
-public class CheckList implements Note {
+public class Checklist implements Note {
 
 	private String title;
 	private List<String> tasks;

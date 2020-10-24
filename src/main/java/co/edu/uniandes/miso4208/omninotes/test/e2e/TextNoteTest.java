@@ -11,10 +11,8 @@ import static org.testng.Assert.assertEquals;
 
 public class TextNoteTest extends TestSuite {
 
-	@Test()
+	@Test(testName = "Create text notes")
 	public void createTextNotesTest() {
-
-		E2eTestUtils.takeSnapshot(driver, "before-create-text-notes");
 
 		for (int i = 0; i < 5; i++) {
 
@@ -24,9 +22,15 @@ public class TextNoteTest extends TestSuite {
 			driver.findElementById("it.feio.android.omninotes:id/fab_note").click();
 
 			// Fill form
+			if (i == 0) {
+				E2eTestUtils.takeSnapshot(driver, "before-taking-photo");
+			}
 			TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
 			driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(textNote.getTitle());
 			driver.findElementById("it.feio.android.omninotes:id/detail_content").sendKeys(textNote.getContent());
+			if (i == 0) {
+				E2eTestUtils.takeSnapshot(driver, "after-taking-photo");
+			}
 			driver.navigate().back();
 
 			notes.add(textNote);
@@ -39,7 +43,7 @@ public class TextNoteTest extends TestSuite {
 		
 	}
 	
-	@Test(dependsOnMethods = {"createTextNotesTest"})
+	@Test(testName = "Edit text notes", dependsOnMethods = {"createTextNotesTest"})
 	public void editTextNoteTest() {
 
 		int idx = 3;
@@ -55,6 +59,8 @@ public class TextNoteTest extends TestSuite {
 		assertEquals(titleTextField.getText(), textNote.getTitle());
 		assertEquals(contentTextField.getText(), textNote.getContent());
 
+		E2eTestUtils.takeSnapshot(driver, "before-editing-text-notes");
+
 		// Edit form
 		TextNote newTextNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
 		textNote.setTitle(newTextNote.getTitle());
@@ -62,6 +68,9 @@ public class TextNoteTest extends TestSuite {
 
 		titleTextField.sendKeys(textNote.getTitle());
 		contentTextField.sendKeys(textNote.getContent());
+
+		E2eTestUtils.takeSnapshot(driver, "after-editing-text-notes");
+
 		driver.navigate().back();
 
 		E2eTestUtils.sortNotes(notes);
@@ -69,10 +78,12 @@ public class TextNoteTest extends TestSuite {
 		
 	}
 	
-	@Test(dependsOnMethods = {"createTextNotesTest"})
+	@Test(testName = "Delete text notes", dependsOnMethods = {"createTextNotesTest"})
 	public void deleteTextNoteTest() {
 
 		int idx = 2;
+
+		E2eTestUtils.takeSnapshot(driver, "before-deleting-text-notes");
 
 		WebElement card = driver.findElementsById("it.feio.android.omninotes:id/card_layout").get(idx);
 		card.click();
@@ -84,6 +95,7 @@ public class TextNoteTest extends TestSuite {
 
 		notes.remove(idx);
 
+		E2eTestUtils.takeSnapshot(driver, "after-deleting-text-notes");
 		E2eTestUtils.assertAllNotesInMainActivity(driver, notes);
 		
 	}
