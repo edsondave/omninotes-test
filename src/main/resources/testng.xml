@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="TestSuite">
+    <test name="E2E">
+        <packages>
+            <package name="co.edu.uniandes.miso4208.omninotes.test.e2e" />
+        </packages>
+    </test>
+</suite>
