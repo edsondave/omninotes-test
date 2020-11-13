@@ -1,0 +1,32 @@
+Prerequisitos:
+* Java 1.8 o superior
+* Appium
+* Android SDK con al menos un emulador instalado.
+
+Ejecución
+* Iniciar emulador:
+
+  - Ejecute el siguiente comando en el directorio donde se encuentra Android SDK
+    para visualizar la lista emuladores instalados.
+
+      emulator/emulator -list-avds
+
+  - Ejecute el siguiente comando para iniciar el emulador en modo headless:
+
+      emulator/emulator @nombre_del_emulador -no-audio -no-boot-anim -no-window -accel on -gpu off &
+
+    Si no desea ejecutar el emulador en modo headless, ejecute el siguiente
+    comando:
+
+      emulator/emulator @nombre_del_emulador &
+
+* Iniciar Appium server.
+
+* Ejecutar prueba:
+
+  En el directorio donde se encuentra el .jar ejecutar el siguiente comando:
+
+    java -jar onmi-notes-e2e-test-1.0.jar ../omninotes.apk -o test-output/1/
+
+  Donde ../omninotes.apk es la ruta donde Appium encontrará el APK a probar y
+  test-output/1/ es la ruta donde se almacenará el resultado.
