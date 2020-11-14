@@ -10,11 +10,13 @@ public final class TestConfiguration {
     public static final String DEFAULT_APP_UNDER_TEST_PATH = new File("omninotes.apk").getAbsolutePath();
     public static final File DEFAULT_OUTPUT_DIRECTORY;
     public static final URL DEFAULT_APPIUM_SERVER_URL;
+    public static final String DEFAULT_TEST_TYPE = "e2e";
 
     private static TestConfiguration instance;
     private String appUnderTestPath = DEFAULT_APP_UNDER_TEST_PATH;
     private File outputDir = DEFAULT_OUTPUT_DIRECTORY;
     private URL appiumServerUrl = DEFAULT_APPIUM_SERVER_URL;
+    private String testType = DEFAULT_TEST_TYPE;
 
     static {
 
@@ -36,6 +38,14 @@ public final class TestConfiguration {
     }
 
     private TestConfiguration() {
+    }
+
+    public String getTestType() {
+        return testType;
+    }
+
+    public void setTestType(String testType) {
+        this.testType = testType;
     }
 
     public static TestConfiguration getInstance() {

@@ -55,6 +55,10 @@ public class TestRunner {
 
         TestConfiguration config = TestConfiguration.getInstance();
 
+        if (!StringUtils.isEmpty(cliArguments.getTestType())) {
+            config.setTestType(cliArguments.getTestType());
+        }
+
         if (!StringUtils.isEmpty(cliArguments.getOutputDirectory())) {
             config.setOutputDir(new File(cliArguments.getOutputDirectory()));
         }
