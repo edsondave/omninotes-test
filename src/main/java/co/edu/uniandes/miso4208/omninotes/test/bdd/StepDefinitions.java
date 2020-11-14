@@ -1,5 +1,6 @@
 package co.edu.uniandes.miso4208.omninotes.test.bdd;
 
+import co.edu.uniandes.miso4208.omninotes.model.Checklist;
 import co.edu.uniandes.miso4208.omninotes.model.Note;
 import co.edu.uniandes.miso4208.omninotes.model.TextNote;
 import co.edu.uniandes.miso4208.omninotes.test.common.AndroidDriverManager;
@@ -35,12 +36,29 @@ public class StepDefinitions {
         driverManager.goToCreateTextNoteForm();
     }
 
+    @Given("I go to create checklist option")
+    public void goToCreateChecklistForm() {
+        driverManager.goBackToMainActivity();
+        driverManager.goToCreateChecklistForm();
+    }
+
     @When("I fill the text note")
     public void fillCreateTextNoteForm() {
 
         TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
         driverManager.fillCreateTextNoteForm(textNote);
         notes.add(textNote);
+
+        driverManager.goBack();
+
+    }
+
+    @When("I fill the checklist")
+    public void fillChecklistNoteForm() {
+
+        Checklist checklist = PODAM_FACTORY.manufacturePojo(Checklist.class);
+        driverManager.fillCreateChecklistForm(checklist);
+        notes.add(checklist);
 
         driverManager.goBack();
 
@@ -56,7 +74,7 @@ public class StepDefinitions {
         driverManager.attachPicture();
     }
 
-    @Then("The photo should be attached to the text note")
+    @Then("The photo should be attached to the note")
     public void verifyPicture() {
         Assert.assertTrue(driverManager.isPictureDisplayed());
     }

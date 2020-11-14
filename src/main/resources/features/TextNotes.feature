@@ -9,4 +9,4 @@ Feature: Create text note
 
   Scenario: Take and attach a picture to text note
     When I attach a photo
-    Then The photo should be attached to the text note
+    Then The photo should be attached to the note

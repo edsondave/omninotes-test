@@ -1,5 +1,6 @@
 package co.edu.uniandes.miso4208.omninotes.test.common;
 
+import co.edu.uniandes.miso4208.omninotes.model.Checklist;
 import co.edu.uniandes.miso4208.omninotes.model.Note;
 import co.edu.uniandes.miso4208.omninotes.model.TextNote;
 import co.edu.uniandes.miso4208.omninotes.test.TestConfiguration;
@@ -92,8 +93,8 @@ public class AndroidDriverManager {
     public void attachPicture() {
         waitAndClick("it.feio.android.omninotes:id/menu_attachment");
         waitAndClick("it.feio.android.omninotes:id/camera");
-        waitAndClick("com.android.camera2:id/shutter_button");
-        waitAndClick("com.android.camera2:id/done_button");
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/shutter_button"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/done_button"))).click();
     }
 
     public boolean isPictureDisplayed() {
@@ -143,5 +144,21 @@ public class AndroidDriverManager {
         }
     }
 
+    public void goToCreateChecklistForm() {
+        goBackToMainActivity();
+        clickPlusButton();
+        waitAndClick("it.feio.android.omninotes:id/fab_checklist");
+    }
+
+    public void fillCreateChecklistForm(Checklist checklist) {
+        driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(checklist.getTitle());
+
+        List <String> tasks = checklist.getTasks();
+        for (int j = 0; j < tasks.size(); j++) {
+            WebElement taskTextField = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.RelativeLayout/android.widget.FrameLayout[2]/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.view.ViewGroup/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[" + (j + 1) + "]/android.widget.LinearLayout/android.widget.EditText");
+            taskTextField.clear();
+            taskTextField.sendKeys(tasks.get(j));
+        }
+    }
 }
 
