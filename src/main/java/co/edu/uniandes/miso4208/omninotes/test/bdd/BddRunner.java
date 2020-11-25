@@ -11,12 +11,12 @@ public class BddRunner extends AbstractTestNGCucumberTests {
 
     @BeforeClass
     public void setUp() {
-        AndroidDriverManager.getInstance().skipWelcomeWizard();
+        // AndroidDriverManager.getInstance().skipWelcomeWizard();
     }
 
     @AfterClass
     public void tearDown() {
-        AndroidDriverManager.getInstance().quit();
+        // AndroidDriverManager.getInstance().quit();
     }
 
 }

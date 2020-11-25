@@ -17,22 +17,25 @@ public class TextNoteTest extends TestSuite {
 		for (int i = 0; i < 5; i++) {
 
 			// Go to create text notes form
-			wait.until(ExpectedConditions.elementToBeClickable(By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
-			driver.findElementById("it.feio.android.omninotes:id/fab_expand_menu_button").click();
-			driver.findElementById("it.feio.android.omninotes:id/fab_note").click();
+			wait.until(ExpectedConditions.elementToBeClickable(By.id("it.feio.android.omninotes:id/fab_expand_menu_button"))).click();
+			wait.until(ExpectedConditions.elementToBeClickable(By.id("it.feio.android.omninotes:id/fab_note"))).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("it.feio.android.omninotes:id/detail_title")));
+
+			if (i == 0) {
+				E2eTestUtils.takeSnapshot(driver, "before-create-text-note");
+			}
 
 			// Fill form
-			if (i == 0) {
-				E2eTestUtils.takeSnapshot(driver, "before-taking-photo");
-			}
 			TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
 			driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(textNote.getTitle());
 			driver.findElementById("it.feio.android.omninotes:id/detail_content").sendKeys(textNote.getContent());
-			if (i == 0) {
-				E2eTestUtils.takeSnapshot(driver, "after-taking-photo");
-			}
-			driver.navigate().back();
 
+
+			if (i == 0) {
+				E2eTestUtils.takeSnapshot(driver, "after-create-text-note");
+			}
+
+			driver.navigate().back();
 			notes.add(textNote);
 
 		}

@@ -3,7 +3,7 @@ Feature: Create checklists
   Background:
     Given I go to create checklist option
 
-  Scenario: Basic text note
+  Scenario: Basic checklist
     When I fill the checklist
     Then It should be created
 

@@ -17,9 +17,6 @@ import java.util.List;
 
 public class StepDefinitions {
 
-    private final String DEVICE_NAME = "Android Emulator";
-    private final String AUTOMATION_NAME = "UiAutomator2";
-    private final String APP_WAIT_ACTIVITY = "it.feio.android.omninotes.intro.IntroActivity";
     protected final PodamFactory PODAM_FACTORY = new PodamFactoryImpl();
 
     protected AndroidDriverManager driverManager;
@@ -27,7 +24,8 @@ public class StepDefinitions {
 
     @Before
     public void setup() {
-        driverManager = AndroidDriverManager.getInstance();
+        driverManager = new AndroidDriverManager();
+        driverManager.setup();
     }
 
     @Given("I go to create text note option")

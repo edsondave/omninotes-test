@@ -6,11 +6,14 @@ import co.edu.uniandes.miso4208.omninotes.model.TextNote;
 import co.edu.uniandes.miso4208.omninotes.test.TestConfiguration;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
 import java.util.List;
 
 public class AndroidDriverManager {
@@ -19,23 +22,10 @@ public class AndroidDriverManager {
     private static final String AUTOMATION_NAME = "UiAutomator2";
     private static final String APP_WAIT_ACTIVITY = "it.feio.android.omninotes.intro.IntroActivity";
 
-    private static AndroidDriverManager instance;
-
     private AndroidDriver<WebElement> driver;
     private WebDriverWait wait;
 
-    private AndroidDriverManager() {
-    }
-
-    public static AndroidDriverManager getInstance() {
-        if (instance == null) {
-            instance = new AndroidDriverManager();
-            instance.setup();
-        }
-        return instance;
-    }
-
-    private void setup() {
+    public void setup() {
 
         TestConfiguration config = TestConfiguration.getInstance();
 
@@ -102,8 +92,16 @@ public class AndroidDriverManager {
         return driver.findElementById("it.feio.android.omninotes:id/gridview_item_picture").isDisplayed();
     }
 
-    private void waitAndClick(String elementId) {
+    public void waitAndClick(String elementId) {
         wait.until(ExpectedConditions.elementToBeClickable(By.id(elementId))).click();
+    }
+
+    public void waitVisibility(String elementId) {
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id(elementId)));
+    }
+
+    public void sendKeys(String elementId, CharSequence charSequence) {
+        driver.findElementById(elementId).sendKeys(charSequence);
     }
 
     public boolean isEqualToMainMenu(List<Note> notes) {
@@ -160,5 +158,16 @@ public class AndroidDriverManager {
             taskTextField.sendKeys(tasks.get(j));
         }
     }
+
+    public void takeSnapshot(String filename) {
+        File outputDirectory = new File(TestConfiguration.getInstance().getOutputDir(), "screenshots/");
+        if (outputDirectory != null) {
+            File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            outputDirectory.mkdirs();
+            File destinationFile = new File(outputDirectory, filename + ".png");
+            screenshotFile.renameTo(destinationFile);
+        }
+    }
+
 }
 

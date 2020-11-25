@@ -10,3 +10,11 @@ Feature: Create text note
   Scenario: Take and attach a picture to text note
     When I attach a photo
     Then The photo should be attached to the note
+
+  Scenario: Basic checklist
+    When I fill the checklist
+    Then It should be created
+
+  Scenario: Take and attach a picture to checklist
+    When I attach a photo
+    Then The photo should be attached to the note
