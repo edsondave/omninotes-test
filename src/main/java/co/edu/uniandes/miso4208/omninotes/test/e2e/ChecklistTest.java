@@ -25,6 +25,8 @@ public class ChecklistTest extends TestSuite {
                     By.id("it.feio.android.omninotes:id/fab_expand_menu_button"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(
                     By.id("it.feio.android.omninotes:id/fab_checklist"))).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("it.feio.android.omninotes:id/detail_title")));
 
             Checklist checkList = PODAM_FACTORY.manufacturePojo(Checklist.class);
             driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(checkList.getTitle());
@@ -38,6 +40,8 @@ public class ChecklistTest extends TestSuite {
             notes.add(checkList);
 
             driver.navigate().back();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
         }
 
@@ -57,27 +61,33 @@ public class ChecklistTest extends TestSuite {
         Checklist checklist = (Checklist) notes.get(idx);
 
         card.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("it.feio.android.omninotes:id/detail_title")));
 
         WebElement titleTextField = driver.findElementById("it.feio.android.omninotes:id/detail_title");
-        WebElement contentTextField = driver.findElementById("it.feio.android.omninotes:id/detail_content");
 
         assertEquals(titleTextField.getText(), checklist.getTitle());
-        assertEquals(contentTextField.getText(), checklist.getContent());
 
         E2eTestUtils.takeSnapshot(driver, "before-editing-ckecklist");
 
         // Edit form
-        Checklist checkList = PODAM_FACTORY.manufacturePojo(Checklist.class);
-        driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(checkList.getTitle());
+        Checklist newCheckList = PODAM_FACTORY.manufacturePojo(Checklist.class);
+        checklist.setTitle(newCheckList.getTitle());
+        driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(checklist.getTitle());
 
-        List <String> tasks = checkList.getTasks();
-        for (int i = 0; i < tasks.size(); i++) {
-            driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.RelativeLayout/android.widget.FrameLayout[2]/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.view.ViewGroup/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[" + (i + 1) + "]/android.widget.LinearLayout/android.widget.EditText").sendKeys(tasks.get(i));
+        List <String> tasks = checklist.getTasks();
+        List <String> newTasks = newCheckList.getTasks();
+        for (int i = 0; i < Math.min(tasks.size(), newTasks.size()); i++) {
+            tasks.set(i, newTasks.get(i));
+            // driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.RelativeLayout/android.widget.FrameLayout[2]/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.view.ViewGroup/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[" + (i + 1) + "]/android.widget.LinearLayout/android.widget.EditText").sendKeys(tasks.get(i));
         }
+        assertEquals(tasks, ((Checklist) notes.get(idx)).getTasks());
 
         E2eTestUtils.takeSnapshot(driver, "after-editing-checklist");
 
         driver.navigate().back();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
         E2eTestUtils.sortNotes(notes);
         E2eTestUtils.assertAllNotesInMainActivity(driver, notes);
@@ -93,6 +103,8 @@ public class ChecklistTest extends TestSuite {
 
         WebElement card = driver.findElementsById("it.feio.android.omninotes:id/card_layout").get(idx);
         card.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//android.widget.ImageView[@content-desc=\"More options\"]")));
 
         driver.findElementByXPath("//android.widget.ImageView[@content-desc=\"More options\"]").click();
 
@@ -100,6 +112,8 @@ public class ChecklistTest extends TestSuite {
         driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[4]/android.widget.LinearLayout").click();
 
         notes.remove(idx);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
         E2eTestUtils.takeSnapshot(driver, "after-deleting-checklist");
         E2eTestUtils.assertAllNotesInMainActivity(driver, notes);

@@ -20,20 +20,27 @@ public class TextNoteTest extends TestSuite {
 			wait.until(ExpectedConditions.elementToBeClickable(By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 			driver.findElementById("it.feio.android.omninotes:id/fab_expand_menu_button").click();
 			driver.findElementById("it.feio.android.omninotes:id/fab_note").click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(
+					By.id("it.feio.android.omninotes:id/detail_title")));
 
-			// Fill form
 			if (i == 0) {
 				E2eTestUtils.takeSnapshot(driver, "before-taking-photo");
 			}
+
+			// Fill form
 			TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
 			driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(textNote.getTitle());
 			driver.findElementById("it.feio.android.omninotes:id/detail_content").sendKeys(textNote.getContent());
+
 			if (i == 0) {
 				E2eTestUtils.takeSnapshot(driver, "after-taking-photo");
 			}
-			driver.navigate().back();
 
+			driver.navigate().back();
 			notes.add(textNote);
+
+			wait.until(ExpectedConditions.visibilityOfElementLocated(
+					By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
 		}
 
@@ -52,6 +59,8 @@ public class TextNoteTest extends TestSuite {
 		TextNote textNote = (TextNote) notes.get(idx);
 
 		card.click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.id("it.feio.android.omninotes:id/detail_title")));
 
 		WebElement titleTextField = driver.findElementById("it.feio.android.omninotes:id/detail_title");
 		WebElement contentTextField = driver.findElementById("it.feio.android.omninotes:id/detail_content");
@@ -72,6 +81,8 @@ public class TextNoteTest extends TestSuite {
 		E2eTestUtils.takeSnapshot(driver, "after-editing-text-notes");
 
 		driver.navigate().back();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
 		E2eTestUtils.sortNotes(notes);
 		E2eTestUtils.assertAllNotesInMainActivity(driver, notes);
@@ -87,13 +98,17 @@ public class TextNoteTest extends TestSuite {
 
 		WebElement card = driver.findElementsById("it.feio.android.omninotes:id/card_layout").get(idx);
 		card.click();
-		
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//android.widget.ImageView[@content-desc=\"More options\"]")));
 		driver.findElementByXPath("//android.widget.ImageView[@content-desc=\"More options\"]").click();
 
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[4]/android.widget.LinearLayout")));
 		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[4]/android.widget.LinearLayout").click();
 
 		notes.remove(idx);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
 		E2eTestUtils.takeSnapshot(driver, "after-deleting-text-notes");
 		E2eTestUtils.assertAllNotesInMainActivity(driver, notes);

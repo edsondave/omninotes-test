@@ -42,7 +42,7 @@ public abstract class TestSuite {
         capabilities.setCapability("appWaitActivity", APP_WAIT_ACTIVITY);
 
         driver = new AndroidDriver<>(config.getAppiumServerUrl(), capabilities);
-        wait = new WebDriverWait(driver, 2);
+        wait = new WebDriverWait(driver, 5);
 
         skipWelcomeWizard();
 

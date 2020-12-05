@@ -17,25 +17,33 @@ public class PhotoTest extends TestSuite {
         for (int i = 0; i < 5; i++) {
 
             // Go to create text notes form
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
-            driver.findElementById("it.feio.android.omninotes:id/fab_expand_menu_button").click();
-            driver.findElementById("it.feio.android.omninotes:id/fab_camera").click();
+            wait.until(ExpectedConditions.elementToBeClickable(
+                    By.id("it.feio.android.omninotes:id/fab_expand_menu_button"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(
+                    By.id("it.feio.android.omninotes:id/fab_camera"))).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("com.android.camera2:id/shutter_button")));
+
+            if (i == 0) {
+                E2eTestUtils.takeSnapshot(driver, "creating-taking-photo");
+            }
 
             // Fill form
-            if (i == 0) {
-                E2eTestUtils.takeSnapshot(driver, "before-taking-photo");
-            }
             TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
 
             wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/shutter_button"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/done_button"))).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("it.feio.android.omninotes:id/detail_title")));
 
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("it.feio.android.omninotes:id/detail_title"))).sendKeys(textNote.getTitle());
+            driver.findElementById("it.feio.android.omninotes:id/detail_title").sendKeys(textNote.getTitle());
             driver.findElementById("it.feio.android.omninotes:id/detail_content").sendKeys(textNote.getContent());
             if (i == 0) {
                 E2eTestUtils.takeSnapshot(driver, "after-taking-photo");
             }
             driver.navigate().back();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
             notes.add(textNote);
 
@@ -56,6 +64,8 @@ public class PhotoTest extends TestSuite {
         TextNote textNote = (TextNote) notes.get(idx);
 
         card.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("it.feio.android.omninotes:id/detail_title")));
 
         WebElement titleTextField = driver.findElementById("it.feio.android.omninotes:id/detail_title");
         WebElement contentTextField = driver.findElementById("it.feio.android.omninotes:id/detail_content");
@@ -76,6 +86,8 @@ public class PhotoTest extends TestSuite {
         E2eTestUtils.takeSnapshot(driver, "after-editing-photo-notes");
 
         driver.navigate().back();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
         E2eTestUtils.sortNotes(notes);
         E2eTestUtils.assertAllNotesInMainActivity(driver, notes);
@@ -91,11 +103,15 @@ public class PhotoTest extends TestSuite {
 
         WebElement card = driver.findElementsById("it.feio.android.omninotes:id/card_layout").get(idx);
         card.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//android.widget.ImageView[@content-desc=\"More options\"]")));
 
         driver.findElementByXPath("//android.widget.ImageView[@content-desc=\"More options\"]").click();
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[4]/android.widget.LinearLayout")));
         driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[4]/android.widget.LinearLayout").click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("it.feio.android.omninotes:id/fab_expand_menu_button")));
 
         notes.remove(idx);
 
