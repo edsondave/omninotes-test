@@ -6,10 +6,9 @@
             <package name="co.edu.uniandes.miso4208.omninotes.test.e2e" />
         </packages>
     </test>
-    <!--
     <test name="BDD">
         <classes>
             <class name="co.edu.uniandes.miso4208.omninotes.test.bdd.BddRunner" />
         </classes>
-    </test>-->
+    </test>
 </suite>

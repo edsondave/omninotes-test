@@ -23,7 +23,7 @@ public class StepDefinitions {
     protected final PodamFactory PODAM_FACTORY = new PodamFactoryImpl();
 
     protected AndroidDriverManager driverManager;
-    protected List <Note> notes = new ArrayList <>();
+    protected Note note;
 
     @Before
     public void setup() {
@@ -47,7 +47,7 @@ public class StepDefinitions {
 
         TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
         driverManager.fillCreateTextNoteForm(textNote);
-        notes.add(textNote);
+        note = textNote;
 
         driverManager.goBack();
 
@@ -58,7 +58,7 @@ public class StepDefinitions {
 
         Checklist checklist = PODAM_FACTORY.manufacturePojo(Checklist.class);
         driverManager.fillCreateChecklistForm(checklist);
-        notes.add(checklist);
+        note = checklist;
 
         driverManager.goBack();
 
@@ -66,7 +66,7 @@ public class StepDefinitions {
 
     @Then("It should be created")
     public void verifyNoteIsCreated() {
-        Assert.assertTrue(driverManager.isEqualToMainMenu(notes));
+        Assert.assertTrue(driverManager.verifyNoteExits(note));
     }
 
     @When("I attach a photo")

@@ -2,7 +2,10 @@ package co.edu.uniandes.miso4208.omninotes.test.e2e;
 
 import co.edu.uniandes.miso4208.omninotes.model.TextNote;
 import co.edu.uniandes.miso4208.omninotes.test.e2e.utils.E2eTestUtils;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
@@ -31,7 +34,13 @@ public class PhotoTest extends TestSuite {
             // Fill form
             TextNote textNote = PODAM_FACTORY.manufacturePojo(TextNote.class);
 
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/shutter_button"))).click();
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/shutter_button")))
+                        .click();
+            } catch(TimeoutException ex) {
+                driver.pressKey(new KeyEvent(AndroidKey.CAMERA));
+            }
+
             wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/done_button"))).click();
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.id("it.feio.android.omninotes:id/detail_title")));

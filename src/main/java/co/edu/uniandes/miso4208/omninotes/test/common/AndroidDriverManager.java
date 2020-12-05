@@ -5,13 +5,18 @@ import co.edu.uniandes.miso4208.omninotes.model.Note;
 import co.edu.uniandes.miso4208.omninotes.model.TextNote;
 import co.edu.uniandes.miso4208.omninotes.test.TestConfiguration;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 public class AndroidDriverManager {
 
@@ -93,8 +98,26 @@ public class AndroidDriverManager {
     public void attachPicture() {
         waitAndClick("it.feio.android.omninotes:id/menu_attachment");
         waitAndClick("it.feio.android.omninotes:id/camera");
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/shutter_button"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/done_button"))).click();
+
+        boolean tryAgain = false;
+        do {
+
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/shutter_button")))
+                        .click();
+            } catch (TimeoutException ex) {
+                driver.pressKey(new KeyEvent(AndroidKey.CAMERA));
+            }
+
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("com.android.camera2:id/done_button"))).click();
+            } catch (TimeoutException ex) {
+                // If it had not tried again, try again
+                tryAgain = !tryAgain;
+            }
+
+        } while(tryAgain);
+
     }
 
     public boolean isPictureDisplayed() {
@@ -104,32 +127,6 @@ public class AndroidDriverManager {
 
     private void waitAndClick(String elementId) {
         wait.until(ExpectedConditions.elementToBeClickable(By.id(elementId))).click();
-    }
-
-    public boolean isEqualToMainMenu(List<Note> notes) {
-        List<WebElement> notesList = driver.findElementsById("it.feio.android.omninotes:id/card_layout");
-
-        if (notesList.size() != notes.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < notes.size(); i++) {
-
-            WebElement card = notesList.get(i);
-            Note note = notes.get(i);
-
-            if(!note.getTitle().equals(
-                    card.findElement(By.id("it.feio.android.omninotes:id/note_title")).getText())) {
-                return false;
-            }
-
-            if(!note.getContent().equals(
-                    card.findElement(By.id("it.feio.android.omninotes:id/note_content")).getText())) {
-                return false;
-            }
-
-        }
-        return true;
     }
 
     public void goBackToMainActivity() {
@@ -159,6 +156,24 @@ public class AndroidDriverManager {
             taskTextField.clear();
             taskTextField.sendKeys(tasks.get(j));
         }
+    }
+
+    public boolean verifyNoteExits(Note note) {
+
+        List<WebElement> notesList = driver.findElementsById("it.feio.android.omninotes:id/card_layout");
+
+        for (int i = 0; i < notesList.size(); i++) {
+
+            WebElement card = notesList.get(i);
+
+            if (note.getTitle().equals(card.findElement(By.id("it.feio.android.omninotes:id/note_title")).getText())) {
+                return true;
+            }
+
+        }
+
+        return false;
+
     }
 }
 
